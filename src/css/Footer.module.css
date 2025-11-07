@@ -1,1 +1,50 @@
 /* フッターコンポーネントのスタイル */
+
+/* フッターのスタイル */
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.footerContainer p {
+  margin: 0;
+}
+
+.footerNav {
+  display: flex;
+  gap: 20px;
+}
+
+.footerNav a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footerNav a:hover {
+  color: #007bff;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .footerContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footerNav {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

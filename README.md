@@ -119,6 +119,8 @@ Repository URLを https://github.com/hirorogo/ekihousousim
 - クラス、関数、コンポーネントごとにコメント文を記述
 - インデントはスペース2つ
 - セミコロン必須
+開発環境はM2MacBook
+デザインにグラデーションを使ってはならない
 
 ## 回答について
 - 回答は日本語を使用

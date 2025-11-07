@@ -1,1 +1,166 @@
 /* ホームページのスタイル */
+.container {
+  width: 100%;
+}
+
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 60px;
+}
+
+.heroTitle {
+  font-size: 48px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.heroSubtitle {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.ctaButton {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.ctaButton:hover {
+  background-color: #0056b3;
+}
+
+.features {
+  margin-bottom: 60px;
+}
+
+.features h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.featureCard {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.featureCard h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.featureCard p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.subjects {
+  margin-bottom: 60px;
+}
+
+.subjects h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.subjectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.subjectTag {
+  padding: 20px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.subjectTag:hover {
+  transform: translateY(-4px);
+}
+
+.cta {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.cta h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.primaryBtn {
+  background-color: #007bff;
+  color: white;
+}
+
+.primaryBtn:hover {
+  background-color: #0056b3;
+}
+
+.secondaryBtn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.secondaryBtn:hover {
+  background-color: #545b62;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 32px;
+  }
+
+  .heroSubtitle {
+    font-size: 16px;
+  }
+
+  .features h2,
+  .subjects h2,
+  .cta h2 {
+    font-size: 24px;
+  }
+}

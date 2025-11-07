@@ -1,1 +1,36 @@
 /* 資料一覧ページのスタイル */
+.container {
+  width: 100%;
+}
+
+.title {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.materialsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.noResults {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 18px;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .title {
+    font-size: 24px;
+  }
+
+  .materialsGrid {
+    grid-template-columns: 1fr;
+  }
+}
