@@ -1,86 +1,167 @@
-## プロジェクト概要
-名古屋鉄道（名鉄）の駅放送を再現できる静的Webアプリケーション
+
+# テスト過去問・プリント共有サイト
+
+## システム概要
+- **目的**: テストの過去問や授業プリントを共有するためのウェブサイトを作成する。
+- **対象ユーザー**: 高校生やその教師。
+- **主な機能**:
+  1. ユーザーが過去問やプリントをアップロード・ダウンロードできる。
+  2. カテゴリや科目ごとに資料を整理できる。
+  3. 資料にコメントや評価を付けられる。
+  4. ユーザー登録・ログイン機能。
+
+## 技術スタック
+- **フロントエンド**: React + Vite
+- **ルーティング**: React Router
+- **スタイリング**: CSS Modules
+- **バックエンド（将来的に追加）**: Firebase（認証、データベース、ストレージ）
+- **デプロイ**: GitHub Pages
 
 ## 機能要件
+### 必須機能
+1. **資料管理機能**
+   - 資料のアップロード（PDF、画像ファイル）。
+   - 資料のダウンロード。
+   - 資料の削除（アップロードしたユーザーのみ）。
+   - 資料の検索（科目、キーワードなど）。
 
-### 1. 駅選択機能
-- 名鉄全線の駅一覧から選択可能
-- 路線別での絞り込み機能
-- 検索機能（駅名の部分一致）
+2. **ユーザー管理機能**
+   - ユーザー登録（メールアドレス、パスワード）。
+   - ログイン・ログアウト。
+   - プロフィール編集（ニックネーム、アイコン画像）。
 
-### 2. 放送種別選択
 
-- **到着放送**：「まもなく○番線に△△行きが到着します」
-- **発車放送**：「○番線の△△行きが発車いたします」
-- **乗り換え案内**：「○○方面は△△線にお乗り換えください」
-- **安全放送**：「黄色い線まで下がってお待ちください」
+4. **UI/UX**
+   - モバイル対応のレスポンシブデザイン。
+   - シンプルで直感的な操作性。
 
-### 3. カスタマイズ機能
-- 行き先設定（特急・急行・普通の種別選択）
-- 番線選択（1-10番線程度）
-- 車両数設定（2両・4両・6両・8両）
-- 女性・男性アナウンサー選択
+### 拡張機能（将来的に追加可能）
+- 資料の閲覧履歴。
+- 資料の「お気に入り」機能。
+- 資料のタグ付け。
+- 他のユーザーとのチャット機能。
 
-### 4. 音声再生機能
-- リアルタイム音声合成（Web Speech API使用）
-- 再生・停止・リピート機能
-- 音量調整
-- 再生速度調整
+## 非機能要件
+1. **パフォーマンス**
+   - 軽量で高速な動作を目指す。
+   - 初期ロード時間を短縮するため、必要に応じてコード分割を行う。
 
-### 5. プリセット機能
-- よく使用する設定の保存
-- プリセット呼び出し機能
-- ローカルストレージでの設定保存
+2. **セキュリティ**
+   - ユーザー認証にはJWT（JSON Web Token）を使用。
 
-## 技術要件
+3. **運用・保守**
+   - GitHubを使用してバージョン管理を行う。
+   - GitHub Pagesでデプロイする。
 
-### フロントエンド
-- **React + Vite**（現在の構成）
-- **LocalStorage**（設定保存）
+## 開発方針
+- **アジャイル開発**:
+  - 短いスプリント（1週間）で開発を進める。
+  - 毎週、進捗確認と計画の見直しを行う。
+- **タスク管理**:
+  - GitHub Issuesを使用してタスクを管理。
+  - プロジェクトボードで進捗を可視化。
 
-### データ構造
-````javascript
-// 駅データ
-const stations = {
-  line: "名古屋本線",
-  stations: [
-    { id: 1, name: "名古屋", platforms: [1,2,3,4] },
-    { id: 2, name: "金山", platforms: [5,6] }
-  ]
-}
+## 最初のスプリント目標
+1. React + Viteの環境構築。
+2. 基本的なページ構成（ホーム、ログイン、資料一覧ページ）の作成。
+3. 資料のアップロード・表示機能の実装。
 
-// 放送設定
-const broadcastConfig = {
-  station: "名古屋",
-  platform: 1,
-  destination: "豊橋",
-  trainType: "特急",
-  cars: 6,
-  voice: "female",
-  broadcastType: "arrival"
-}
-````
+## ディレクトリ構成
+```
+src/                # ソースコード
+├── components/     # Reactカスタムコンポーネント
+├── css/            # カスタムCSS
+├── pages/          # ページコンポーネント
+├── App.jsx         # メインコンポーネント
+├── index.jsx       # エントリーポイント
+public/             # 公開用静的ファイル
+.github/workflows/  # GitHub Actions設定
+package.json        # プロジェクト設定
+vite.config.js      # Vite設定
+```
 
-### ディレクトリ構成
-````
+## デプロイ
+- **Repository URL**: [https://github.com/hirorogo/ekihousousim](https://github.com/hirorogo/ekihousousim)
+- GitHub Pagesで公開する際、`vite.config.js`の`base`プロパティをリポジトリ名に合わせて設定してください。
+```js
+export default defineConfig({
+  base: '/ekihousousim/', // リポジトリ名に合わせて設定
+})
+```
+このプロジェクトでは、以下のルールに従ってコードを生成してください：
+
+1. React（JS） + Viteを使用しています。
+2. React Routerを使用してルーティングを管理します。
+3. コンポーネントは関数コンポーネントを使用してください。
+4. module.css を使ってください
+5. GitHub Pagesで公開するため、React Routerに設定してください。
+Repository URLを https://github.com/hirorogo/ekihousousim
+# GitHub Copilot Instructions
+
+## Project Overview
+このリポジトリは、です。
+
+## Technical Specifications
+- 使用言語: , JS
+- フレームワーク:  React 18.0 上に構築
+- buildツール: Node.js v20.11.0
+- デプロイ: GitHubActionsでビルドしてGitHubPagesに自動デプロイ
+- 文字エンコーディング: UTF-8
+- 国際化: 日本語 (ja) デフォルト
+
+
+## Development Guidelines
+
+## Coding Conventions
+- 使用言語: javascript, Markdown
+- 日本語でコメント文を記述
+- 絵文字の使用禁止（コード内、コメント内、回答内すべて）
+- クラス、関数、コンポーネントごとにコメント文を記述
+- インデントはスペース2つ
+- セミコロン必須
+
+## 回答について
+- 回答は日本語を使用
+- 絵文字は一切使用しない
+- 技術用語は適切な日本語訳を使用
+- コード例には詳細なコメントを含める
+- ファイルパスは絶対パスで記述
 src/
-├── components/
-│   ├── StationSelector/
-│   ├── BroadcastPlayer/
-│   ├── SettingsPanel/
-│   └── PresetManager/
-├── data/
-│   └── stations.js
-├── hooks/
-│   └── useSpeechSynthesis.js
-├── utils/
-│   └── broadcastGenerator.js
-└── styles/
-    └── global.css
-````
-
-### ページ構成
-1. **メインページ**：全機能を1画面に集約
-2. **駅選択エリア**：路線選択→駅選択
-3. **設定エリア**：放送内容のカスタマイズ
-4. **再生エリア**：放送テキスト表示と再生ボタン
+├── components/          # Reactカスタムコンポーネント
+│   ├── Header.jsx       # ヘッダーコンポーネント
+│   ├── Footer.jsx       # フッターコンポーネント  
+│   ├── Navigation.jsx   # ナビゲーションコンポーネント
+│   ├── Layout.jsx       # レイアウトコンポーネント
+│   ├── MaterialCard.jsx # 資料カードコンポーネント
+│   └── SearchBar.jsx    # 検索バーコンポーネント
+├── pages/               # ページコンポーネント
+│   ├── Home.jsx         # ホームページ
+│   ├── Login.jsx        # ログインページ
+│   ├── Register.jsx     # ユーザー登録ページ
+│   ├── MaterialList.jsx # 資料一覧ページ
+│   ├── MaterialUpload.jsx # 資料アップロードページ
+│   ├── MaterialDetail.jsx # 資料詳細ページ
+│   └── Profile.jsx      # プロフィールページ
+├── css/                 # CSS Modules
+│   ├── Home.module.css
+│   ├── Login.module.css
+│   ├── Register.module.css
+│   ├── MaterialList.module.css
+│   ├── MaterialUpload.module.css
+│   ├── MaterialDetail.module.css
+│   ├── Profile.module.css
+│   ├── Header.module.css
+│   ├── Footer.module.css
+│   ├── Navigation.module.css
+│   ├── Layout.module.css
+│   ├── MaterialCard.module.css
+│   └── SearchBar.module.css
+├── utils/               # ユーティリティ関数
+│   ├── api.js          # API呼び出し用関数
+│   ├── helpers.js      # 共通ヘルパー関数
+│   └── constants.js    # 定数定義
+├── hooks/               # カスタムフック
+│   ├── useAuth.js      # 認証管理フック
+│   └── useLocalStorage.js # ローカルストレージ管理フック
+├── App.jsx             # メインコンポーネント
+└── main.jsx            # エントリーポイント
