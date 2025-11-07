@@ -12,7 +12,7 @@ import './App.css';
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/ekihousousim">
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
