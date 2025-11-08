@@ -4,21 +4,19 @@
 export const SUBJECTS = [
   { id: 1, name: '数学', color: '#FF6B6B' },
   { id: 2, name: '英語', color: '#4ECDC4' },
-  { id: 3, name: '国語', color: '#45B7D1' },
+  { id: 3, name: '言語文化', color: '#45B7D1' },
   { id: 4, name: '物理', color: '#FFA07A' },
-  { id: 5, name: '化学', color: '#98D8C8' },
-  { id: 6, name: '生物', color: '#F7DC6F' },
-  { id: 7, name: '日本史', color: '#BB8FCE' },
-  { id: 8, name: '世界史', color: '#85C1E2' },
+  { id: 5, name: '科学と人間生活', color: '#98D8C8' },
+  { id: 6, name: '電気回路', color: '#BB8FCE' },
 ];
 
 // テスト過去問の初期データ
 export const INITIAL_MATERIALS = [
   {
     id: 1,
-    title: '2024年度 数学 中間テスト',
+    title: 'test',
     subject: '数学',
-    description: '高校1年生対象の中間テスト過去問',
+    description: 'test description',
     rating: 4.5,
     comments: 3,
     uploadDate: '2024-10-15',
@@ -26,9 +24,9 @@ export const INITIAL_MATERIALS = [
   },
   {
     id: 2,
-    title: '英語 発音練習プリント',
+    title: 'test2',
     subject: '英語',
-    description: 'リスニング対策用プリント',
+    description: 'test description 2',  
     rating: 4.0,
     comments: 2,
     uploadDate: '2024-10-14',
