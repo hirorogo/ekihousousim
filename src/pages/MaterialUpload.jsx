@@ -194,11 +194,19 @@ const MaterialUpload = () => {
     e.preventDefault();
     setUploading(true);
     
+    console.log('📋 アップロード処理開始:', { 
+      filesCount: formData.files.length, 
+      enableOCR, 
+      enableMerge 
+    });
+    
     try {
       // 1. すべてのファイルをPDFに変換（進捗表示付き）
+      console.log('🔄 PDF変換処理開始...');
       const pdfFiles = [];
       for (let i = 0; i < formData.files.length; i++) {
         const file = formData.files[i];
+        console.log(`📄 変換中: ${file.name} (${file.type})`);
         setPdfProgress(prev => ({ ...prev, [i]: 0 }));
         
         try {
@@ -206,26 +214,30 @@ const MaterialUpload = () => {
             setPdfProgress(prev => ({ ...prev, [i]: progress }));
           });
           pdfFiles.push(pdfFile);
+          console.log(`✅ 変換完了: ${pdfFile.name}`);
         } catch (error) {
-          console.error(`${file.name}のPDF変換エラー:`, error);
+          console.error(`❌ ${file.name}のPDF変換エラー:`, error);
           alert(`${file.name}のPDF変換に失敗しました: ${error.message}`);
           setUploading(false);
           return;
         }
       }
       setConvertedFiles(pdfFiles);
+      console.log('✅ 全PDF変換完了:', pdfFiles.length, 'ファイル');
       
       // 2. PDF結合処理（複数ファイルかつ結合が有効な場合）
       let finalPdf = null;
       if (enableMerge && pdfFiles.length > 1) {
+        console.log('🔗 PDF結合処理開始...');
         setMergeProgress(0);
         try {
           finalPdf = await mergePDFs(pdfFiles, (progress) => {
             setMergeProgress(progress);
           }, formData.title || '結合された資料');
           setMergedPdf(finalPdf);
+          console.log('✅ PDF結合完了:', finalPdf.name, `(${(finalPdf.size / 1024 / 1024).toFixed(2)} MB)`);
         } catch (error) {
-          console.error('PDF結合エラー:', error);
+          console.error('❌ PDF結合エラー:', error);
           alert(`PDF結合に失敗しました: ${error.message}`);
           setUploading(false);
           return;
@@ -233,6 +245,7 @@ const MaterialUpload = () => {
       } else {
         // 結合しない場合は最初のPDFファイルを使用
         finalPdf = pdfFiles[0];
+        console.log('📄 PDF結合スキップ（単一ファイルまたは無効）');
       }
       
       // 3. OCRが有効な場合、テキスト抽出を実行
@@ -286,7 +299,7 @@ const MaterialUpload = () => {
       setPdfProgress({});
       setMergeProgress(0);
     } catch (error) {
-      console.error('アップロードエラー:', error);
+      console.error('❌ アップロードエラー:', error);
       alert('アップロードに失敗しました');
       setUploading(false);
     }
