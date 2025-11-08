@@ -8,6 +8,8 @@ export const SUBJECTS = [
   { id: 4, name: '物理', color: '#FFA07A' },
   { id: 5, name: '科学と人間生活', color: '#98D8C8' },
   { id: 6, name: '電気回路', color: '#BB8FCE' },
+  { id: 7, name: 'その他', color: '#F7DC6F' },
+  { id: 8, name: '配布プリント', color: '#999999' },
 ];
 
 // テスト過去問の初期データ
@@ -38,26 +40,25 @@ export const INITIAL_MATERIALS = [
 export const SITE_ACCESS_PASSWORD = '123';
 
 // API設定
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// 環境変数で設定（例: VITE_API_URL=http://localhost:3001）
+const rawBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// 後続の '/api' や末尾スラッシュの重複を防ぐ正規化処理
+const normalizeBase = (url) => {
+  if (!url) return url;
+  // 末尾のスラッシュを削除
+  let u = url.replace(/\/+$/, '');
+  // 末尾が '/api' なら取り除く（エンドポイント側で /api を付与する）
+  u = u.replace(/\/api$/, '');
+  return u;
+};
+export const API_BASE_URL = normalizeBase(rawBase);
 
 // APIエンドポイント
 export const API_ENDPOINTS = {
-  // 資料関連
-  materials: `${API_BASE_URL}/api/materials`,
   upload: `${API_BASE_URL}/api/upload`,
-  
-  // コメント関連  
+  materials: `${API_BASE_URL}/api/materials`,
   comments: `${API_BASE_URL}/api/comments`,
-  
-  // 評価関連
   ratings: `${API_BASE_URL}/api/ratings`,
-  
-  // ユーザー関連
   users: `${API_BASE_URL}/api/users`,
-  
-  // OCR関連
   ocr: `${API_BASE_URL}/api/ocr`,
-  
-  // 静的ファイル
-  uploads: `${API_BASE_URL}/uploads`,
 };

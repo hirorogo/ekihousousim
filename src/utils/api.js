@@ -1,5 +1,5 @@
 // API呼び出し用のユーティリティ関数
-import { API_ENDPOINTS } from './constants';
+import { API_ENDPOINTS } from './constants.js';
 
 // 基本的なHTTPリクエスト関数
 const makeRequest = async (url, options = {}) => {
@@ -33,11 +33,14 @@ export const postData = async (endpoint, data) => {
 };
 
 // POST リクエスト（FormData - ファイルアップロード用）
-export const postFormData = async (endpoint, formData) => {
-  return makeRequest(endpoint, {
+export const postFormData = async (url, formData) => {
+  const res = await fetch(url, {
     method: 'POST',
     body: formData,
+    // fetch は multipart/form-data のヘッダを自動設定するので Content-Type は不要
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
 };
 
 // PUT リクエスト
@@ -61,7 +64,11 @@ export const deleteData = async (endpoint) => {
 // === 具体的なAPI関数 ===
 
 // 資料関連
-export const getMaterials = () => fetchData(API_ENDPOINTS.materials);
+export const getMaterials = async () => {
+  const res = await fetch(API_ENDPOINTS.materials);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
 export const getMaterial = (id) => fetchData(`${API_ENDPOINTS.materials}/${id}`);
 export const uploadMaterial = (formData) => postFormData(API_ENDPOINTS.upload, formData);
 export const deleteMaterial = (id) => deleteData(`${API_ENDPOINTS.materials}/${id}`);

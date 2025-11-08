@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": 1762614298404,
+    "title": "数学テスト問題",
+    "subject": "数学",
+    "description": "アップロードテスト用ファイル",
+    "uploader": "テストユーザー",
+    "fileName": "math-problem.png",
+    "filePath": "/uploads/1762614298402-math-problem.png",
+    "fileSize": 4718,
+    "fileType": "image/png",
+    "uploadDate": "2025-11-08T15:04:58.404Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": [
+      "数学"
+    ]
+  },
+  {
+    "id": 1762614854952,
+    "title": "s",
+    "subject": "数学",
+    "description": "s",
+    "uploader": "テストユーザー",
+    "fileName": "ã¹ã©ã¤ããä¾.pdf",
+    "filePath": "/uploads/1762614854939-ã¹ã©ã¤ããä¾.pdf",
+    "fileSize": 4513970,
+    "fileType": "application/pdf",
+    "uploadDate": "2025-11-08T15:14:14.952Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": [
+      "数学"
+    ]
+  }
+]
