@@ -7,9 +7,8 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>テスト過去問・プリント共有サイト</h1>
+        <h1 className={styles.heroTitle}>テスト過去問・ノート共有サイト</h1>
         <p className={styles.heroSubtitle}>
-          高校生と教師のための資料共有プラットフォーム
         </p>
         <Link to="/materials" className={styles.ctaButton}>
           資料を探す
