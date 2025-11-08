@@ -53,10 +53,7 @@ const Home = () => {
       <section className={styles.cta}>
         <h2>今すぐ始める</h2>
         <div className={styles.ctaButtons}>
-          <Link to="/register" className={styles.primaryBtn}>
-            ユーザー登録
-          </Link>
-          <Link to="/materials/upload" className={styles.secondaryBtn}>
+          <Link to="/materials/upload" className={styles.primaryBtn}>
             資料をアップロード
           </Link>
         </div>

@@ -34,15 +34,8 @@ export const INITIAL_MATERIALS = [
   },
 ];
 
-// ユーザー管理用の定数
-export const TEST_USERS = [
-  {
-    id: 1,
-    email: 'test@example.com',
-    password: 'password123',
-    nickname: 'テストユーザー',
-  },
-];
+// サイトアクセス用の共通パスワード
+export const SITE_ACCESS_PASSWORD = '123';
 
 // API エンドポイント（将来的に使用）
 export const API_BASE_URL = 'https://api.example.com';

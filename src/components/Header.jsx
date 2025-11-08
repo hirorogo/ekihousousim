@@ -13,7 +13,6 @@ const Header = () => {
           <Link to="/" className={styles.navLink}>ホーム</Link>
           <Link to="/materials" className={styles.navLink}>資料一覧</Link>
           <Link to="/materials/upload" className={styles.navLink}>アップロード</Link>
-          <Link to="/login" className={styles.navLink}>ログイン</Link>
         </nav>
       </div>
     </header>
