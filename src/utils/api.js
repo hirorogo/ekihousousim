@@ -1,72 +1,84 @@
 // API呼び出し用のユーティリティ関数
-import { API_BASE_URL } from './constants';
+import { API_ENDPOINTS } from './constants';
 
-// GET リクエスト
-export const fetchData = async (endpoint) => {
+// 基本的なHTTPリクエスト関数
+const makeRequest = async (url, options = {}) => {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+    const response = await fetch(url, options);
     if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`API Error ${response.status}: ${errorText}`);
     }
     return await response.json();
   } catch (error) {
-    console.error('Fetch Error:', error);
+    console.error('API Request Error:', error);
     throw error;
   }
 };
 
-// POST リクエスト
+// GET リクエスト
+export const fetchData = async (endpoint) => {
+  return makeRequest(endpoint);
+};
+
+// POST リクエスト（JSON）
 export const postData = async (endpoint, data) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Post Error:', error);
-    throw error;
-  }
+  return makeRequest(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+// POST リクエスト（FormData - ファイルアップロード用）
+export const postFormData = async (endpoint, formData) => {
+  return makeRequest(endpoint, {
+    method: 'POST',
+    body: formData,
+  });
 };
 
 // PUT リクエスト
 export const putData = async (endpoint, data) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Put Error:', error);
-    throw error;
-  }
+  return makeRequest(endpoint, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 };
 
 // DELETE リクエスト
 export const deleteData = async (endpoint) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Delete Error:', error);
-    throw error;
-  }
+  return makeRequest(endpoint, {
+    method: 'DELETE',
+  });
 };
+
+// === 具体的なAPI関数 ===
+
+// 資料関連
+export const getMaterials = () => fetchData(API_ENDPOINTS.materials);
+export const getMaterial = (id) => fetchData(`${API_ENDPOINTS.materials}/${id}`);
+export const uploadMaterial = (formData) => postFormData(API_ENDPOINTS.upload, formData);
+export const deleteMaterial = (id) => deleteData(`${API_ENDPOINTS.materials}/${id}`);
+
+// コメント関連
+export const getComments = (materialId) => fetchData(`${API_ENDPOINTS.comments}?materialId=${materialId}`);
+export const postComment = (commentData) => postData(API_ENDPOINTS.comments, commentData);
+
+// 評価関連
+export const getRatingStats = (materialId) => fetchData(`${API_ENDPOINTS.ratings}/stats/${materialId}`);
+export const postRating = (ratingData) => postData(API_ENDPOINTS.ratings, ratingData);
+
+// ユーザー関連
+export const getUsers = () => fetchData(API_ENDPOINTS.users);
+export const getUser = (id) => fetchData(`${API_ENDPOINTS.users}/${id}`);
+export const createUser = (userData) => postData(API_ENDPOINTS.users, userData);
+export const updateUser = (id, userData) => putData(`${API_ENDPOINTS.users}/${id}`, userData);
+
+// OCR関連
+export const runOCR = (ocrData) => postData(API_ENDPOINTS.ocr, ocrData);

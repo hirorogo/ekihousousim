@@ -37,5 +37,27 @@ export const INITIAL_MATERIALS = [
 // サイトアクセス用の共通パスワード
 export const SITE_ACCESS_PASSWORD = '123';
 
-// API エンドポイント（将来的に使用）
-export const API_BASE_URL = 'https://api.example.com';
+// API設定
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+// APIエンドポイント
+export const API_ENDPOINTS = {
+  // 資料関連
+  materials: `${API_BASE_URL}/api/materials`,
+  upload: `${API_BASE_URL}/api/upload`,
+  
+  // コメント関連  
+  comments: `${API_BASE_URL}/api/comments`,
+  
+  // 評価関連
+  ratings: `${API_BASE_URL}/api/ratings`,
+  
+  // ユーザー関連
+  users: `${API_BASE_URL}/api/users`,
+  
+  // OCR関連
+  ocr: `${API_BASE_URL}/api/ocr`,
+  
+  // 静的ファイル
+  uploads: `${API_BASE_URL}/uploads`,
+};

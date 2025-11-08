@@ -4,6 +4,7 @@ import Tesseract from 'tesseract.js';
 import { PDFDocument, rgb } from 'pdf-lib';
 import styles from '../css/MaterialUpload.module.css';
 import { SUBJECTS } from '../utils/constants';
+import { uploadMaterial } from '../utils/api';
 
 // フロントエンドPDF変換関数（進捗表示対応）
 const convertToPDF = async (file, onProgress) => {
@@ -164,6 +165,7 @@ const MaterialUpload = () => {
     subject: SUBJECTS[0].name,
     description: '',
     files: [], // 複数ファイル対応
+    uploader: 'テストユーザー', // デフォルトアップロード者
   });
   const [uploading, setUploading] = useState(false);
   const [convertedFiles, setConvertedFiles] = useState([]); // PDF変換後ファイル
@@ -174,6 +176,7 @@ const MaterialUpload = () => {
   const [ocrProgress, setOcrProgress] = useState({}); // OCR進捗
   const [pdfProgress, setPdfProgress] = useState({}); // PDF変換進捗
   const [mergeProgress, setMergeProgress] = useState(0); // PDF結合進捗
+  const [filePreviews, setFilePreviews] = useState([]); // ファイルプレビュー用
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -184,14 +187,62 @@ const MaterialUpload = () => {
   };
 
   const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
     setFormData(prev => ({
       ...prev,
-      files: Array.from(e.target.files),
+      files: selectedFiles,
     }));
+    
+    // ファイルプレビューを生成
+    const previews = selectedFiles.map((file, index) => {
+      const preview = {
+        id: index,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+        preview: null,
+      };
+      
+      // 画像ファイルの場合はプレビュー画像を生成
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setFilePreviews(prev => 
+            prev.map(p => 
+              p.id === index ? { ...p, preview: e.target.result } : p
+            )
+          );
+        };
+        reader.readAsDataURL(file);
+      }
+      
+      return preview;
+    });
+    
+    setFilePreviews(previews);
+    console.log('選択されたファイル:', selectedFiles);
+  };
+
+  const removeFile = (indexToRemove) => {
+    const newFiles = formData.files.filter((_, index) => index !== indexToRemove);
+    const newPreviews = filePreviews.filter((_, index) => index !== indexToRemove);
+    
+    setFormData(prev => ({
+      ...prev,
+      files: newFiles,
+    }));
+    setFilePreviews(newPreviews);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.title || !formData.subject || formData.files.length === 0) {
+      alert('必須項目を入力してください');
+      return;
+    }
+    
     setUploading(true);
     
     console.log('📋 アップロード処理開始:', { 
@@ -243,7 +294,6 @@ const MaterialUpload = () => {
           return;
         }
       } else {
-        // 結合しない場合は最初のPDFファイルを使用
         finalPdf = pdfFiles[0];
         console.log('📄 PDF結合スキップ（単一ファイルまたは無効）');
       }
@@ -253,7 +303,6 @@ const MaterialUpload = () => {
         const ocrResultsArray = [];
         for (let i = 0; i < formData.files.length; i++) {
           const file = formData.files[i];
-          // 画像ファイルのみOCR実行
           if (file.type.startsWith('image/')) {
             try {
               setOcrProgress(prev => ({ ...prev, [i]: 0 }));
@@ -279,28 +328,44 @@ const MaterialUpload = () => {
         setOcrResults(ocrResultsArray);
       }
       
-      // 4. TODO: 最終的なPDFファイルをサーバーにアップロードする処理
-      console.log('アップロード対象ファイル:', finalPdf);
+      // 4. サーバーにアップロード
+      console.log('🚀 サーバーアップロード開始...');
+      const uploadFormData = new FormData();
+      uploadFormData.append('title', formData.title);
+      uploadFormData.append('subject', formData.subject);
+      uploadFormData.append('description', formData.description);
+      uploadFormData.append('uploader', formData.uploader);
+      uploadFormData.append('file', finalPdf);
       
-      setUploading(false);
-      alert(`資料をアップロードしました！${enableOCR ? '（OCR処理完了）' : ''}${enableMerge && pdfFiles.length > 1 ? '（PDF結合完了）' : ''}`);
+      const result = await uploadMaterial(uploadFormData);
       
-      // フォームリセット
-      setFormData({
-        title: '',
-        subject: SUBJECTS[0].name,
-        description: '',
-        files: [],
-      });
-      setConvertedFiles([]);
-      setMergedPdf(null);
-      setOcrResults([]);
-      setOcrProgress({});
-      setPdfProgress({});
-      setMergeProgress(0);
+      if (result.success) {
+        console.log('✅ アップロード成功:', result);
+        alert(`資料をアップロードしました！${enableOCR ? '（OCR処理完了）' : ''}${enableMerge && pdfFiles.length > 1 ? '（PDF結合完了）' : ''}`);
+        
+        // フォームリセット
+        setFormData({
+          title: '',
+          subject: SUBJECTS[0].name,
+          description: '',
+          files: [],
+          uploader: 'テストユーザー',
+        });
+        setConvertedFiles([]);
+        setMergedPdf(null);
+        setOcrResults([]);
+        setOcrProgress({});
+        setPdfProgress({});
+        setMergeProgress(0);
+        setFilePreviews([]);
+      } else {
+        throw new Error(result.message || 'アップロードに失敗しました');
+      }
+      
     } catch (error) {
       console.error('❌ アップロードエラー:', error);
-      alert('アップロードに失敗しました');
+      alert(`アップロードに失敗しました: ${error.message}`);
+    } finally {
       setUploading(false);
     }
   };
@@ -353,10 +418,62 @@ const MaterialUpload = () => {
             type="file"
             onChange={handleFileChange}
             className={styles.fileInput}
-            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt"
             multiple
             required
           />
+          
+          {/* ファイルプレビュー */}
+          {filePreviews.length > 0 && (
+            <div className={styles.filePreviewContainer}>
+              <h4>選択されたファイル ({filePreviews.length}個)</h4>
+              <div className={styles.filePreviewGrid}>
+                {filePreviews.map((filePreview, idx) => (
+                  <div key={idx} className={styles.filePreviewItem}>
+                    <div className={styles.filePreviewContent}>
+                      {filePreview.preview ? (
+                        <img 
+                          src={filePreview.preview} 
+                          alt={filePreview.name}
+                          className={styles.previewImage}
+                        />
+                      ) : (
+                        <div className={styles.fileIcon}>
+                          {filePreview.type.includes('pdf') && '📄'}
+                          {filePreview.type.includes('text') && '📝'}
+                          {filePreview.type.includes('word') && '📝'}
+                          {!filePreview.type.includes('pdf') && 
+                           !filePreview.type.includes('text') && 
+                           !filePreview.type.includes('word') && 
+                           !filePreview.type.includes('image') && '📎'}
+                        </div>
+                      )}
+                      <div className={styles.fileInfo}>
+                        <p className={styles.fileName}>{filePreview.name}</p>
+                        <p className={styles.fileSize}>
+                          {(filePreview.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                        <p className={styles.fileType}>{filePreview.type}</p>
+                        {filePreview.type.startsWith('image/') && (
+                          <span className={styles.ocrIndicator}>（OCR対応）</span>
+                        )}
+                      </div>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => removeFile(idx)}
+                      className={styles.removeFileBtn}
+                      title="ファイルを削除"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* 従来のファイルリスト表示（バックアップ） */}
           {formData.files.length > 0 && (
             <ul className={styles.fileList}>
               {formData.files.map((file, idx) => (
