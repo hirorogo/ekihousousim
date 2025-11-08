@@ -1,9 +1,13 @@
 // 複数ファイルアップロード & PDF変換API（将来OCR対応）
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-// const { PDFDocument } = require('pdf-lib'); // PDF変換用（実装例）
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+// import { PDFDocument } from 'pdf-lib'; // PDF変換用（実装例）
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
@@ -44,4 +48,4 @@ router.post('/', upload.array('files', 10), async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

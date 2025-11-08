@@ -1,8 +1,13 @@
 // OCR API（アップロード済みファイルのテキスト抽出）
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const { createWorker } = require('tesseract.js');
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import Tesseract from 'tesseract.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const router = express.Router();
 
 // POST /api/ocr
@@ -14,7 +19,7 @@ router.post('/', async (req, res) => {
   if (!fs.existsSync(absPath)) return res.status(404).json({ error: 'ファイルが存在しません' });
 
   try {
-    const worker = await createWorker('jpn');
+    const worker = await Tesseract.createWorker('jpn');
     const { data: { text } } = await worker.recognize(absPath);
     await worker.terminate();
     res.json({ text });
@@ -23,4 +28,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
