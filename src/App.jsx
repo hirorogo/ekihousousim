@@ -6,7 +6,6 @@ import Login from './pages/Login';
 import MaterialList from './pages/MaterialList';
 import MaterialUpload from './pages/MaterialUpload';
 import MaterialDetail from './pages/MaterialDetail';
-import Profile from './pages/Profile';
 import Layout from './components/Layout';
 import { SITE_ACCESS_PASSWORD } from './utils/constants';
 import './App.css';
@@ -64,7 +63,6 @@ const App = () => {
           <Route path="/materials" element={<MaterialList />} />
           <Route path="/materials/upload" element={<MaterialUpload />} />
           <Route path="/materials/:id" element={<MaterialDetail />} />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Layout>
     </Router>

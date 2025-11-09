@@ -72,20 +72,3 @@ export const getMaterials = async () => {
 export const getMaterial = (id) => fetchData(`${API_ENDPOINTS.materials}/${id}`);
 export const uploadMaterial = (formData) => postFormData(API_ENDPOINTS.upload, formData);
 export const deleteMaterial = (id) => deleteData(`${API_ENDPOINTS.materials}/${id}`);
-
-// コメント関連
-export const getComments = (materialId) => fetchData(`${API_ENDPOINTS.comments}?materialId=${materialId}`);
-export const postComment = (commentData) => postData(API_ENDPOINTS.comments, commentData);
-
-// 評価関連
-export const getRatingStats = (materialId) => fetchData(`${API_ENDPOINTS.ratings}/stats/${materialId}`);
-export const postRating = (ratingData) => postData(API_ENDPOINTS.ratings, ratingData);
-
-// ユーザー関連
-export const getUsers = () => fetchData(API_ENDPOINTS.users);
-export const getUser = (id) => fetchData(`${API_ENDPOINTS.users}/${id}`);
-export const createUser = (userData) => postData(API_ENDPOINTS.users, userData);
-export const updateUser = (id, userData) => putData(`${API_ENDPOINTS.users}/${id}`, userData);
-
-// OCR関連
-export const runOCR = (ocrData) => postData(API_ENDPOINTS.ocr, ocrData);

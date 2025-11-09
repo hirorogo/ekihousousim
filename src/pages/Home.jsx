@@ -26,10 +26,7 @@ const Home = () => {
             <h3>科目で整理</h3>
             <p>複数の科目から資料を検索・整理</p>
           </div>
-          <div className={styles.featureCard}>
-            <h3>評価・コメント</h3>
-            <p>資料に評価やコメントを付けて情報共有</p>
-          </div>
+
         </div>
       </section>
 

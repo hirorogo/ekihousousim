@@ -20,7 +20,6 @@ export const INITIAL_MATERIALS = [
     subject: '数学',
     description: 'test description',
     rating: 4.5,
-    comments: 3,
     uploadDate: '2024-10-15',
     uploader: 'user1',
   },
@@ -30,7 +29,6 @@ export const INITIAL_MATERIALS = [
     subject: '英語',
     description: 'test description 2',  
     rating: 4.0,
-    comments: 2,
     uploadDate: '2024-10-14',
     uploader: 'user2',
   },
@@ -57,8 +55,4 @@ export const API_BASE_URL = normalizeBase(rawBase);
 export const API_ENDPOINTS = {
   upload: `${API_BASE_URL}/api/upload`,
   materials: `${API_BASE_URL}/api/materials`,
-  comments: `${API_BASE_URL}/api/comments`,
-  ratings: `${API_BASE_URL}/api/ratings`,
-  users: `${API_BASE_URL}/api/users`,
-  ocr: `${API_BASE_URL}/api/ocr`,
 };

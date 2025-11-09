@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .history
+
+# アップロードファイルを除外（構造は保持）
+server/uploads/*
+!server/uploads/.gitkeep

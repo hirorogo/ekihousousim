@@ -1,9 +1,0 @@
-<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
-  <rect width="400" height="300" fill="#ffe4e1"/>
-  <text x="50" y="50" font-family="Arial" font-size="24" fill="#333">英語テスト解答</text>
-  <text x="50" y="100" font-family="Arial" font-size="16" fill="#666">問題1の答え: (x - 1)(x + 4) = 0</text>
-  <text x="50" y="130" font-family="Arial" font-size="16" fill="#666">よって x = 1, -4</text>
-  <text x="50" y="180" font-family="Arial" font-size="16" fill="#666">問題2の答え:</text>
-  <text x="50" y="210" font-family="Arial" font-size="16" fill="#666">f'(x) = 3x² + 4x - 5</text>
-  <text x="50" y="260" font-family="Arial" font-size="14" fill="#999">解答用紙</text>
-</svg>
