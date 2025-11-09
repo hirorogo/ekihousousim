@@ -17,15 +17,19 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOAD_DIR),
   filename: (req, file, cb) => {
-    // オリジナルのファイル名をデコード
-    const originalName = decodeURIComponent(file.originalname);
+    // バッファからUTF-8でデコード
+    const originalName = Buffer.from(file.originalname, 'binary').toString('utf8');
     
-    // 日本語ファイル名を維持しつつ、タイムスタンプを追加
+    // タイムスタンプを生成
     const timestamp = Date.now();
+    
+    // ファイル名から拡張子を取得
     const ext = path.extname(originalName);
+    // 拡張子を除いたベース名を取得
     const basename = path.basename(originalName, ext);
     
-    // ファイル名を構築（タイムスタンプ_元のファイル名.拡張子）
+    // 安全なファイル名を生成
+    // タイムスタンプを先頭に付け、ファイル名を維持
     const safeName = `${timestamp}_${basename}${ext}`;
     
     cb(null, safeName);
@@ -59,8 +63,11 @@ router.post('/', upload.single('file'), async (req, res) => {
       return res.status(401).json({ error: 'ログインが必要です' });
     }
     
+    // オリジナルのファイル名をUTF-8でデコード
+    const originalFileName = Buffer.from(file ? file.originalname : '', 'binary').toString('utf8');
+    
     console.log('アップロード受信:', {
-      file: file ? file.originalname : 'なし',
+      file: originalFileName || 'なし',
       body: req.body
     });
     
@@ -92,14 +99,13 @@ router.post('/', upload.single('file'), async (req, res) => {
       subject,
       description: description || '',
       uploader,
-      fileName: file.originalname,
+      fileName: Buffer.from(file.originalname, 'latin1').toString('utf8'),
       filePath: `/uploads/${file.filename}`,
       fileSize: file.size,
       fileType: file.mimetype,
       uploadDate: new Date().toISOString(),
       viewCount: 0,
       downloadCount: 0,
-      rating: 0,
       tags: [subject.toLowerCase()],
     };
     

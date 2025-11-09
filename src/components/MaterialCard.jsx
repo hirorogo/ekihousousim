@@ -6,10 +6,6 @@ import styles from '../css/MaterialCard.module.css';
 const MaterialCard = ({ material }) => {
   const navigate = useNavigate();
 
-  const renderRating = (rating) => {
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-  };
-
   // 詳細ページへのナビゲーション
   const handleViewDetails = () => {
     navigate(`/materials/${material.id}`);
@@ -61,20 +57,12 @@ const MaterialCard = ({ material }) => {
         </span>
       </div>
       
-      <div className={styles.fileInfo}>
-        <span className={styles.fileName}>{material.fileName}</span>
-        <span className={styles.fileSize}>{formatFileSize(material.fileSize)}</span>
-      </div>
-      
       {material.description && (
         <p className={styles.description}>{material.description}</p>
       )}
       
       <div className={styles.cardFooter}>
         <div className={styles.metadata}>
-          <div className={styles.rating}>
-            {renderRating(material.rating)} {material.rating}/5.0
-          </div>
           <div className={styles.stats}>
             <span className={styles.views}>閲覧: {material.viewCount}</span>
             <span className={styles.downloads}>DL: {material.downloadCount}</span>
