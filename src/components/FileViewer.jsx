@@ -5,7 +5,13 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import styles from '../css/FileViewer.module.css';
 
 // PDF.js の worker を設定
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+// PDFのオプション設定
+const pdfOptions = {
+  cMapUrl: 'https://unpkg.com/pdfjs-dist@2.16.105/cmaps/',
+  cMapPacked: true,
+};
 
 const FileViewer = ({ fileUrl, fileName, fileType }) => {
   const [numPages, setNumPages] = useState(null);
@@ -49,118 +55,80 @@ const FileViewer = ({ fileUrl, fileName, fileType }) => {
     }
   }, [fileUrl, fileType]);
 
-  // PDFビューアー
-  if (fileType === 'application/pdf') {
-    return (
-      <div className={styles.container}>
-        <div className={styles.toolbar}>
-          <button 
-            onClick={() => setPageNumber(pageNumber > 1 ? pageNumber - 1 : 1)}
+  // ファイルダウンロード処理
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName || 'download';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('ダウンロードエラー:', error);
+      setError('ファイルのダウンロードに失敗しました');
+    }
+  };
+
+  // PDFビューワーのレンダリング
+  const renderPdfViewer = () => (
+    <div className={styles.pdfContainer}>
+      <Document
+        file={fileUrl}
+        onLoadSuccess={onDocumentLoadSuccess}
+        onLoadError={onDocumentLoadError}
+        options={pdfOptions}
+      >
+        <Page pageNumber={pageNumber} />
+      </Document>
+      {numPages > 1 && (
+        <div className={styles.pdfControls}>
+          <button
+            onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
             disabled={pageNumber <= 1}
-            className={styles.navButton}
           >
             前のページ
           </button>
-          <span className={styles.pageInfo}>
-            ページ {pageNumber} / {numPages || '-'}
+          <span>
+            {pageNumber} / {numPages}
           </span>
-          <button 
-            onClick={() => setPageNumber(pageNumber < numPages ? pageNumber + 1 : numPages)}
+          <button
+            onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))}
             disabled={pageNumber >= numPages}
-            className={styles.navButton}
           >
             次のページ
           </button>
         </div>
+      )}
+    </div>
+  );
 
-        {error ? (
-          <div className={styles.error}>
-            <p>{error}</p>
-          </div>
-        ) : (
-          <div className={styles.pdfContainer}>
-            <Document
-              file={fileUrl}
-              onLoadSuccess={onDocumentLoadSuccess}
-              onLoadError={onDocumentLoadError}
-              loading={<div className={styles.loading}>PDF読み込み中...</div>}
-            >
-              <Page 
-                pageNumber={pageNumber}
-                width={Math.min(800, window.innerWidth - 40)}
-                loading={<div className={styles.loading}>ページ読み込み中...</div>}
-              />
-            </Document>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // 画像ビューアー
-  if (fileType && fileType.startsWith('image/')) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.imageContainer}>
-          <img 
-            src={fileUrl} 
-            alt={fileName}
-            className={styles.image}
-            onError={(e) => {
-              e.target.style.display = 'none';
-              setError('画像ファイルの読み込みに失敗しました');
-            }}
-          />
-          {error && (
-            <div className={styles.error}>
-              <p>{error}</p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // テキストビューアー
-  if (fileType === 'text/plain') {
-    return (
-      <div className={styles.container}>
-        {loading ? (
-          <div className={styles.loading}>テキストファイル読み込み中...</div>
-        ) : error ? (
-          <div className={styles.error}>
-            <p>{error}</p>
-          </div>
-        ) : (
-          <div className={styles.textContainer}>
-            <pre className={styles.textContent}>{textContent}</pre>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // サポートされていないファイル形式
   return (
-    <div className={styles.container}>
-      <div className={styles.unsupported}>
-        <h3>プレビューに対応していないファイル形式です</h3>
-        <p>ファイル形式: {fileType}</p>
-        <p>ファイル名: {fileName}</p>
-        <button 
-          className={styles.downloadButton}
-          onClick={() => {
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }}
-        >
+    <div className={styles.fileViewer}>
+      <div className={styles.toolbar}>
+        <button onClick={handleDownload} className={styles.downloadButton}>
           ダウンロード
         </button>
       </div>
+      
+      {loading && <div>読み込み中...</div>}
+      {error && <div className={styles.error}>{error}</div>}
+      
+      {!loading && !error && (
+        <>
+          {fileType === 'application/pdf' && renderPdfViewer()}
+          {fileType.startsWith('image/') && (
+            <img src={fileUrl} alt={fileName} className={styles.image} />
+          )}
+          {fileType === 'text/plain' && (
+            <pre className={styles.textContent}>{textContent}</pre>
+          )}
+        </>
+      )}
     </div>
   );
 };

@@ -16,7 +16,20 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 // multer設定
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+  filename: (req, file, cb) => {
+    // オリジナルのファイル名をデコード
+    const originalName = decodeURIComponent(file.originalname);
+    
+    // 日本語ファイル名を維持しつつ、タイムスタンプを追加
+    const timestamp = Date.now();
+    const ext = path.extname(originalName);
+    const basename = path.basename(originalName, ext);
+    
+    // ファイル名を構築（タイムスタンプ_元のファイル名.拡張子）
+    const safeName = `${timestamp}_${basename}${ext}`;
+    
+    cb(null, safeName);
+  }
 });
 
 const upload = multer({ 
@@ -40,6 +53,11 @@ router.post('/', upload.single('file'), async (req, res) => {
   try {
     const file = req.file;
     const { title, subject, description, uploader } = req.body;
+    
+    // アップロードユーザーの検証
+    if (!uploader || uploader === 'test') {
+      return res.status(401).json({ error: 'ログインが必要です' });
+    }
     
     console.log('アップロード受信:', {
       file: file ? file.originalname : 'なし',
