@@ -17,16 +17,16 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOAD_DIR),
   filename: (req, file, cb) => {
-    // バッファからUTF-8でデコード
-    const originalName = Buffer.from(file.originalname, 'binary').toString('utf8');
-    
     // タイムスタンプを生成
     const timestamp = Date.now();
     
+    // ファイル名をlatin1からUTF-8に変換
+    const decodedName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    
     // ファイル名から拡張子を取得
-    const ext = path.extname(originalName);
+    const ext = path.extname(decodedName);
     // 拡張子を除いたベース名を取得
-    const basename = path.basename(originalName, ext);
+    const basename = path.basename(decodedName, ext);
     
     // 安全なファイル名を生成
     // タイムスタンプを先頭に付け、ファイル名を維持
@@ -63,11 +63,8 @@ router.post('/', upload.single('file'), async (req, res) => {
       return res.status(401).json({ error: 'ログインが必要です' });
     }
     
-    // オリジナルのファイル名をUTF-8でデコード
-    const originalFileName = Buffer.from(file ? file.originalname : '', 'binary').toString('utf8');
-    
     console.log('アップロード受信:', {
-      file: originalFileName || 'なし',
+      file: file ? file.originalname : 'なし',
       body: req.body
     });
     
