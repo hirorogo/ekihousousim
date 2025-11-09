@@ -1,0 +1,134 @@
+/* 統計情報ページスタイル */
+.statisticsPage {
+  max-width: 1400px;
+}
+
+.statisticsPage h1 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 0.75rem;
+}
+
+.ranking {
+  overflow-x: auto;
+}
+
+.rankingTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.rankingTable thead {
+  background-color: #34495e;
+  color: white;
+}
+
+.rankingTable th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.rankingTable tbody tr {
+  border-bottom: 1px solid #ecf0f1;
+  transition: background-color 0.2s ease;
+}
+
+.rankingTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.rankingTable tbody tr:nth-child(1) {
+  background-color: #fff9e6;
+}
+
+.rankingTable tbody tr:nth-child(2) {
+  background-color: #f5f5f5;
+}
+
+.rankingTable tbody tr:nth-child(3) {
+  background-color: #f9f9f9;
+}
+
+.rankingTable td {
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.rank {
+  font-weight: 700;
+  color: #3498db;
+  font-size: 1.1rem;
+  text-align: center;
+  width: 60px;
+}
+
+.rankingTable tbody tr:nth-child(1) .rank {
+  color: #f39c12;
+}
+
+.rankingTable tbody tr:nth-child(2) .rank {
+  color: #95a5a6;
+}
+
+.rankingTable tbody tr:nth-child(3) .rank {
+  color: #cd7f32;
+}
+
+.titleCell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  font-weight: 600;
+  color: #27ae60;
+}
+
+.noData {
+  text-align: center;
+  padding: 2rem;
+  color: #95a5a6;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+  .rankingTable {
+    font-size: 0.85rem;
+  }
+
+  .rankingTable th,
+  .rankingTable td {
+    padding: 0.75rem 0.5rem;
+  }
+}

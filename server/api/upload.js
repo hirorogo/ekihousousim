@@ -90,6 +90,9 @@ router.post('/', upload.single('file'), async (req, res) => {
       }
     }
     
+    // IPアドレスを取得
+    const ipAddress = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || '不明';
+    
     const newMaterial = {
       id: Date.now(),
       title,
@@ -101,6 +104,7 @@ router.post('/', upload.single('file'), async (req, res) => {
       fileSize: file.size,
       fileType: file.mimetype,
       uploadDate: new Date().toISOString(),
+      ipAddress: ipAddress,
       viewCount: 0,
       downloadCount: 0,
       tags: [subject.toLowerCase()],

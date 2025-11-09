@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 
 import uploadApi from './api/upload.js';
 import materialsApi from './api/materials.js';
+import adminApi from './api/admin.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +22,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/upload', uploadApi);
 app.use('/api/materials', materialsApi);
+app.use('/api/admin', adminApi);
 
 app.get('/', (req, res) => {
   res.send('APIサーバー稼働中');
