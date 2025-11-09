@@ -53,27 +53,14 @@ router.put('/:id', (req, res) => {
   const data = JSON.parse(fs.readFileSync(DATA_PATH));
   const idx = data.findIndex(u => u.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'ユーザーが見つかりません' });
-  const { nickname, email, profileImage, bio, role } = req.body;
+  const { nickname, email, profileImage, bio } = req.body;
   if (nickname) data[idx].nickname = nickname;
   if (email) data[idx].email = email;
   if (profileImage) data[idx].profileImage = profileImage;
   if (bio) data[idx].bio = bio;
-  if (role) data[idx].role = role; // 管理者による役割変更
   data[idx].updatedAt = new Date().toISOString();
   fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
   res.json(data[idx]);
-});
-
-// ユーザー削除（管理者用）
-router.delete('/:id', (req, res) => {
-  let data = JSON.parse(fs.readFileSync(DATA_PATH));
-  const idx = data.findIndex(u => u.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'ユーザーが見つかりません' });
-  
-  const deletedUser = data[idx];
-  data.splice(idx, 1);
-  fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
-  res.json({ message: 'ユーザーを削除しました', user: deletedUser });
 });
 
 export default router;

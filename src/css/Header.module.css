@@ -48,65 +48,6 @@
   color: #007bff;
 }
 
-/* 管理者関連のスタイル */
-.adminLink {
-  background-color: #dc3545 !important;
-  color: white !important;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-.adminLink:hover {
-  background-color: #c82333 !important;
-  color: white !important;
-}
-
-.rightNav {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.adminBtn {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
-}
-
-.adminBtn:hover {
-  background-color: #5a6268;
-}
-
-.userInfo {
-  color: #495057;
-  font-weight: 500;
-  font-size: 14px;
-  margin-right: 10px;
-}
-
-.logoutBtn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
-}
-
-.logoutBtn:hover {
-  background-color: #c82333;
-}
-
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
   .headerContainer {
