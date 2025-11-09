@@ -34,5 +34,59 @@
     "tags": [
       "数学"
     ]
+  },
+  {
+    "id": 1762614947904,
+    "title": "ｃ",
+    "subject": "配布プリント",
+    "description": "ｄ",
+    "uploader": "テストユーザー",
+    "fileName": "ï½_2025-11-08T15-15-42.pdf",
+    "filePath": "/uploads/1762614947897-ï½_2025-11-08T15-15-42.pdf",
+    "fileSize": 2480916,
+    "fileType": "application/pdf",
+    "uploadDate": "2025-11-08T15:15:47.904Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": [
+      "配布プリント"
+    ]
+  },
+  {
+    "id": 1762649767600,
+    "title": "英語問題テスト",
+    "subject": "英語",
+    "description": "画像ビューアーテスト用ファイル",
+    "uploader": "テストユーザー",
+    "fileName": "english-problem.png",
+    "filePath": "/uploads/1762649767600-english-problem.png",
+    "fileSize": 12455,
+    "fileType": "image/png",
+    "uploadDate": "2025-11-09T00:56:07.600Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": [
+      "英語"
+    ]
+  },
+  {
+    "id": 1762651243188,
+    "title": "物理テストファイル",
+    "subject": "物理",
+    "description": "テキストビューアーテスト用ファイル",
+    "uploader": "テストユーザー",
+    "fileName": "physics-test.txt",
+    "filePath": "/uploads/1762651243187-physics-test.txt",
+    "fileSize": 574,
+    "fileType": "text/plain",
+    "uploadDate": "2025-11-09T01:20:43.188Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": [
+      "物理"
+    ]
   }
 ]

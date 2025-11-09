@@ -1,12 +1,273 @@
 /* 資料詳細ページのスタイル */
 .container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* ヘッダーセクション */
+.header {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* パンくずリスト */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.breadcrumbButton {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  padding: 0;
+}
+
+.breadcrumbButton:hover {
+  color: #2980b9;
+}
+
+.breadcrumbSeparator {
+  margin: 0 8px;
+  color: #6c757d;
+}
+
+.breadcrumbCurrent {
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+/* 資料情報 */
+.materialInfo {
+  margin-top: 16px;
 }
 
 .title {
-  font-size: 28px;
-  color: #333;
-  margin-bottom: 30px;
+  font-size: 32px;
+  color: #2c3e50;
+  margin: 0 0 24px 0;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+/* メタデータ */
+.metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.metadataItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  font-weight: bold;
+  color: #495057;
+  min-width: 80px;
+}
+
+.value {
+  color: #2c3e50;
+  flex: 1;
+}
+
+.subject {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+/* 科目別の色設定 */
+.subject数学 { background-color: #FF6B6B; }
+.subject英語 { background-color: #4ECDC4; }
+.subject言語文化 { background-color: #45B7D1; }
+.subject物理 { background-color: #FFA07A; }
+.subject科学と人間生活 { background-color: #98D8C8; }
+.subject電気回路 { background-color: #BB8FCE; }
+.subjectその他 { background-color: #F7DC6F; }
+.subject配布プリント { background-color: #999999; }
+
+/* 説明文 */
+.description {
+  margin-bottom: 24px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #3498db;
+}
+
+.description h3 {
+  margin: 0 0 12px 0;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.description p {
+  margin: 0;
+  color: #495057;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* アクションボタン */
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.downloadButton {
+  padding: 12px 24px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.downloadButton:hover {
+  background-color: #229954;
+}
+
+.backButton {
+  padding: 12px 24px;
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: #7f8c8d;
+}
+
+/* ビューアーセクション */
+.viewerSection {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.viewerTitle {
+  font-size: 24px;
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+  font-weight: bold;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 8px;
+}
+
+/* ローディング・エラー状態 */
+.loading,
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 400px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+.loading p {
+  font-size: 18px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.error h2 {
+  color: #e74c3c;
+  margin: 0 0 16px 0;
+  font-size: 24px;
+}
+
+.error p {
+  color: #c0392b;
+  margin: 0 0 24px 0;
+  font-size: 16px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .metadata {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .metadataItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .label {
+    min-width: auto;
+    font-size: 14px;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .downloadButton,
+  .backButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .viewerSection {
+    padding: 16px;
+  }
+  
+  .viewerTitle {
+    font-size: 20px;
+  }
 }

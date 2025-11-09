@@ -6,19 +6,19 @@
 
 | 項目 | 内容 |
 |------|------|
-| **ベース URL** | `https://[REGION]-[PROJECT_ID].cloudfunctions.net/api` |
-| **認証方式** | Firebase Authentication（JWT） |
-| **コンテンツ形式** | `application/json` |
+| **ベース URL** | `http://localhost:3001` (開発環境) |
+| **認証方式** | なし（開発環境）、将来的にJWT予定 |
+| **コンテンツ形式** | `application/json`, `multipart/form-data` |
 | **エラーハンドリ** | HTTP ステータスコード + JSON エラーレスポンス |
 | **バージョン** | v1（現在）|
-| **推奨バージョン** | 将来 v2 対応予定 |
+| **技術スタック** | Node.js + Express.js |
 
 ### 1.2 対応環境
 
 | 環境 | 状態 | 備考 |
 |------|------|------|
-| **開発環境** | 計画中 | ローカル Firebase Emulator |
-| **ステージング** | 計画中 | Firebase staging プロジェクト |
+| **開発環境** | 実装済み | ローカル Node.js サーバー（ポート3001）|
+| **ステージング** | 未実装 | 将来的に Heroku 等で予定 |
 | **本番環境** | 計画中 | Firebase production プロジェクト |
 
 ## 2. 認証・認可
@@ -48,17 +48,58 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyMyJ9.eyJpc3MiOiJodHRwczovL
 - user:delete - 自分のデータ削除
 
 公開スコープ:
-- public:read - 公開資料の読み取り
+| **本番環境** | 未実装 | 将来的に Vercel 等で予定 |
+
+### 1.3 API エンドポイント一覧
+
+| エンドポイント | メソッド | 説明 | 実装状況 |
+|---------------|----------|------|----------|
+| `/api/materials` | GET | 資料一覧取得 | ✅ 実装済み |
+| `/api/materials/:id` | GET | 資料詳細取得 | ✅ 実装済み |
+| `/api/materials/:id` | DELETE | 資料削除 | ✅ 実装済み |
+| `/api/upload` | POST | ファイルアップロード | ✅ 実装済み |
+| `/api/comments` | GET | コメント一覧取得 | ✅ 実装済み |
+| `/api/comments` | POST | コメント投稿 | ✅ 実装済み |
+| `/api/ratings` | GET | 評価取得 | ✅ 実装済み |
+| `/api/ratings` | POST | 評価投稿 | ✅ 実装済み |
+| `/api/users` | GET | ユーザー一覧取得 | ✅ 実装済み |
+| `/api/users/:id` | GET | ユーザー詳細取得 | ✅ 実装済み |
+| `/api/ocr` | POST | OCR処理実行 | ✅ 実装済み |
+
+## 2. 認証・セキュリティ
+
+### 2.1 認証方式
+
+**現在（開発環境）**:
+- 認証なし（共通パスワード'123'によるフロントエンド制御のみ）
+
+**将来予定**:
+- JWT トークン認証
+- Firebase Authentication
+- ロールベースアクセス制御
+
+### 2.2 権限管理
+
+**現在**:
+- 全ユーザーが全機能にアクセス可能
+
+**将来予定**:
+```
+権限レベル:
+- student: 資料の閲覧・アップロード・コメント
+- teacher: 資料の管理・削除
+- admin: 全機能へのアクセス
 ```
 
 ### 2.3 CORS ポリシー
 
 ```
-許可オリジン: https://hirorogo.github.io/ekihousousim/
+許可オリジン: 
+  - http://localhost:5173 (開発環境)
+  - https://hirorogo.github.io (本番環境)
 許可メソッド: GET, POST, PUT, DELETE, OPTIONS
 許可ヘッダ: Content-Type, Authorization
 許可認証情報: yes
-キャッシュ時間: 3600 秒
 ```
 
 ## 3. エラーハンドリング
@@ -67,16 +108,19 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyMyJ9.eyJpc3MiOiJodHRwczovL
 
 ```json
 {
-  "error": {
-    "code": "RESOURCE_NOT_FOUND",
-    "message": "要求されたリソースが見つかりません",
-    "details": {
-      "resourceType": "material",
-      "resourceId": "123"
-    },
-    "timestamp": "2024-01-01T12:00:00Z",
-    "requestId": "req-abc-123-xyz"
-  }
+  "error": "エラーメッセージ",
+  "success": false,
+  "timestamp": "2025-11-09T12:00:00Z"
+}
+```
+
+または
+
+```json
+{
+  "message": "成功メッセージ",
+  "success": true,
+  "data": {...}
 }
 ```
 
@@ -86,80 +130,474 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyMyJ9.eyJpc3MiOiJodHRwczovL
 |-------|------|------|
 | **200** | OK | リクエスト成功 |
 | **201** | Created | リソース作成成功 |
-| **204** | No Content | 削除成功（応答本文なし） |
-| **400** | Bad Request | リクエスト形式が不正 |
-| **401** | Unauthorized | 認証失敗 |
-| **403** | Forbidden | 権限不足 |
+| **400** | Bad Request | 必須項目不足・ファイル形式エラー |
+| **403** | Forbidden | ファイル形式不正 |
 | **404** | Not Found | リソースが見つからない |
-| **409** | Conflict | リソース重複（一意制約違反） |
-| **413** | Payload Too Large | ペイロードサイズ超過 |
-| **429** | Too Many Requests | レート制限超過 |
+| **413** | Payload Too Large | ファイルサイズ超過（50MB制限） |
 | **500** | Internal Server Error | サーバーエラー |
-| **503** | Service Unavailable | サービス利用不可 |
 
 ### 3.3 エラーコード一覧
 
 ```
-認証関連:
-- AUTH_INVALID_TOKEN: トークンが無効
-- AUTH_EXPIRED_TOKEN: トークンの有効期限切れ
-- AUTH_MISSING_TOKEN: 認証ヘッダがない
-
-リソース関連:
-- RESOURCE_NOT_FOUND: リソースが見つからない
-- RESOURCE_ALREADY_EXISTS: リソースが既に存在
-- RESOURCE_INVALID_STATE: リソースの状態が不正
-
-入力検証:
-- VALIDATION_ERROR: 入力値が不正
-- VALIDATION_TITLE_REQUIRED: タイトルは必須
-- VALIDATION_FILE_TOO_LARGE: ファイルが大きすぎる
-
-ファイル処理:
-- FILE_UPLOAD_FAILED: ファイルアップロード失敗
-- FILE_FORMAT_INVALID: ファイル形式が不正
-- FILE_STORAGE_FULL: ストレージが満杯
-
-その他:
-- RATE_LIMIT_EXCEEDED: レート制限超過
-- INTERNAL_ERROR: サーバーエラー
+エラーメッセージ:
+- "ファイルがありません"
+- "必須項目が不足しています"  
+- "サポートされていないファイル形式です"
+- "ファイルサイズが制限を超えています"
+- "サーバーエラー"
 ```
 
-## 4. API エンドポイント
+## 4. API エンドポイント詳細
 
-### 4.1 Materials（資料）
+### 4.1 Materials（資料管理）
 
-#### 4.1.1 GET /materials - 資料一覧取得
+#### 4.1.1 GET /api/materials - 資料一覧取得
 
+**説明**: 保存されている全資料の一覧を取得
+
+**リクエスト**:
+```http
+GET /api/materials
+Content-Type: application/json
 ```
-GET /materials?subject=数学&keyword=中間&sortBy=newest&page=1&limit=10
 
-説明: フィルター条件に基づいて資料一覧を取得
+**レスポンス例**:
+```json
+[
+  {
+    "id": 1762614298402,
+    "title": "数学問題集",
+    "subject": "数学", 
+    "description": "高校1年生向け数学問題",
+    "uploader": "テストユーザー",
+    "fileName": "math-problem.png",
+    "filePath": "/uploads/1762614298402-math-problem.png",
+    "fileSize": 245760,
+    "fileType": "image/png",
+    "uploadDate": "2025-11-09T03:18:18.402Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": ["数学"]
+  }
+]
+```
 
-クエリパラメータ:
-┌──────────┬──────────┬──────────────────────────────────────┐
-│ 名前     │ 型      │ 説明                                  │
-├──────────┼──────────┼──────────────────────────────────────┤
-│ subject  │ string   │ 科目でフィルター（オプション）        │
-│ keyword  │ string   │ キーワードで検索（オプション）        │
-│ sortBy   │ string   │ 並び順（newest/oldest/rating/...）   │
-│ page     │ number   │ ページ番号（デフォルト: 1）           │
-│ limit    │ number   │ 1ページあたりの件数（デフォルト: 10） │
-│ tags     │ string[] │ タグでフィルター（カンマ区切り）      │
-│ minRating│ number   │ 最低評価（デフォルト: 0）             │
-│ maxRating│ number   │ 最高評価（デフォルト: 5）             │
-└──────────┴──────────┴──────────────────────────────────────┘
+#### 4.1.2 GET /api/materials/:id - 資料詳細取得
 
-レスポンス例:
+**説明**: 指定されたIDの資料詳細を取得
+
+**リクエスト**:
+```http
+GET /api/materials/1762614298402
+```
+
+**レスポンス例**:
+```json
 {
-  "status": "success",
-  "data": {
-    "materials": [
-      {
-        "id": 1,
-        "title": "2024年度 数学 中間テスト",
-        "subject": "数学",
-        "description": "高校 1 年の中間テスト予想問題",
+  "id": 1762614298402,
+  "title": "数学問題集",
+  "subject": "数学",
+  "description": "高校1年生向け数学問題",
+  "uploader": "テストユーザー",
+  "fileName": "math-problem.png", 
+  "filePath": "/uploads/1762614298402-math-problem.png",
+  "fileSize": 245760,
+  "fileType": "image/png",
+  "uploadDate": "2025-11-09T03:18:18.402Z",
+  "viewCount": 1,
+  "downloadCount": 0,
+  "rating": 0,
+  "tags": ["数学"]
+}
+```
+
+**エラーレスポンス**:
+```json
+{
+  "message": "資料が見つかりません"
+}
+```
+
+#### 4.1.3 DELETE /api/materials/:id - 資料削除
+
+**説明**: 指定されたIDの資料とファイルを削除
+
+**リクエスト**:
+```http
+DELETE /api/materials/1762614298402
+```
+
+**レスポンス例**:
+```json
+{
+  "message": "削除しました"
+}
+```
+
+### 4.2 Upload（ファイルアップロード）
+
+#### 4.2.1 POST /api/upload - ファイルアップロード
+
+**説明**: ファイルをアップロードし、資料データベースに登録
+
+**リクエスト**:
+```http
+POST /api/upload
+Content-Type: multipart/form-data
+
+フォームデータ:
+- file: (ファイル) アップロードするファイル
+- title: (string) 資料タイトル（必須）
+- subject: (string) 科目名（必須）
+- description: (string) 説明文（任意）
+- uploader: (string) アップロード者名（必須）
+```
+
+**対応ファイル形式**:
+- PDF: `application/pdf`
+- 画像: `image/jpeg`, `image/jpg`, `image/png`
+- テキスト: `text/plain`
+
+**ファイルサイズ制限**: 50MB
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "message": "アップロードが完了しました",
+  "material": {
+    "id": 1762614298402,
+    "title": "数学問題集",
+    "subject": "数学",
+    "description": "高校1年生向け数学問題",
+    "uploader": "テストユーザー",
+    "fileName": "math-problem.png",
+    "filePath": "/uploads/1762614298402-math-problem.png",
+    "fileSize": 245760,
+    "fileType": "image/png", 
+    "uploadDate": "2025-11-09T03:18:18.402Z",
+    "viewCount": 0,
+    "downloadCount": 0,
+    "rating": 0,
+    "tags": ["数学"]
+  }
+}
+```
+
+**エラーレスポンス**:
+```json
+{
+  "error": "ファイルがありません"
+}
+```
+
+```json
+{
+  "error": "必須項目が不足しています"
+}
+```
+
+```json
+{
+  "error": "サポートされていないファイル形式です"
+}
+```
+
+### 4.3 Comments（コメント管理）
+
+#### 4.3.1 GET /api/comments - コメント一覧取得
+
+**説明**: コメント一覧を取得
+
+**クエリパラメータ**:
+- materialId: (number) 資料IDでフィルター
+
+**リクエスト**:
+```http
+GET /api/comments?materialId=1762614298402
+```
+
+**レスポンス例**:
+```json
+[
+  {
+    "id": 1,
+    "materialId": 1762614298402,
+    "author": "コメント者",
+    "text": "とても参考になりました",
+    "rating": 5,
+    "createdAt": "2025-11-09T03:20:00.000Z"
+  }
+]
+```
+
+#### 4.3.2 POST /api/comments - コメント投稿
+
+**説明**: 新しいコメントを投稿
+
+**リクエスト**:
+```http
+POST /api/comments
+Content-Type: application/json
+
+{
+  "materialId": 1762614298402,
+  "author": "コメント者",
+  "text": "とても参考になりました",
+  "rating": 5
+}
+```
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "comment": {
+    "id": 2,
+    "materialId": 1762614298402,
+    "author": "コメント者",
+    "text": "とても参考になりました", 
+    "rating": 5,
+    "createdAt": "2025-11-09T03:25:00.000Z"
+  }
+}
+```
+
+### 4.4 Ratings（評価管理）
+
+#### 4.4.1 GET /api/ratings/stats/:materialId - 評価統計取得
+
+**説明**: 指定資料の評価統計を取得
+
+**リクエスト**:
+```http
+GET /api/ratings/stats/1762614298402
+```
+
+**レスポンス例**:
+```json
+{
+  "materialId": 1762614298402,
+  "averageRating": 4.2,
+  "totalRatings": 5,
+  "distribution": {
+    "1": 0,
+    "2": 1,
+    "3": 0,
+    "4": 2,
+    "5": 2
+  }
+}
+```
+
+#### 4.4.2 POST /api/ratings - 評価投稿
+
+**説明**: 資料に評価を投稿
+
+**リクエスト**:
+```http
+POST /api/ratings
+Content-Type: application/json
+
+{
+  "materialId": 1762614298402,
+  "rating": 5,
+  "userId": "user123"
+}
+```
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "rating": {
+    "id": 3,
+    "materialId": 1762614298402,
+    "rating": 5,
+    "userId": "user123",
+    "createdAt": "2025-11-09T03:30:00.000Z"
+  }
+}
+```
+
+### 4.5 Users（ユーザー管理）
+
+#### 4.5.1 GET /api/users - ユーザー一覧取得
+
+**説明**: ユーザー一覧を取得
+
+**リクエスト**:
+```http
+GET /api/users
+```
+
+**レスポンス例**:
+```json
+[
+  {
+    "id": "user1",
+    "nickname": "テストユーザー",
+    "email": "test@example.com",
+    "createdAt": "2025-11-09T00:00:00.000Z"
+  }
+]
+```
+
+#### 4.5.2 GET /api/users/:id - ユーザー詳細取得
+
+**説明**: 指定ユーザーの詳細を取得
+
+**リクエスト**:
+```http
+GET /api/users/user1
+```
+
+**レスポンス例**:
+```json
+{
+  "id": "user1",
+  "nickname": "テストユーザー",
+  "email": "test@example.com",
+  "bio": "高校生です",
+  "uploadedMaterials": 5,
+  "createdAt": "2025-11-09T00:00:00.000Z"
+}
+```
+
+### 4.6 OCR（文字認識）
+
+#### 4.6.1 POST /api/ocr - OCR処理実行
+
+**説明**: アップロードした画像からテキストを抽出
+
+**リクエスト**:
+```http
+POST /api/ocr
+Content-Type: application/json
+
+{
+  "imageUrl": "/uploads/1762614298402-math-problem.png",
+  "language": "jpn"
+}
+```
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "text": "問題1: 次の方程式を解きなさい\n2x + 5 = 11",
+  "confidence": 95.2
+}
+```
+
+## 5. データモデル
+
+### 5.1 Material（資料）
+
+```json
+{
+  "id": "number",              // ユニークID（タイムスタンプ）
+  "title": "string",           // 資料タイトル（必須）
+  "subject": "string",         // 科目名（必須）
+  "description": "string",     // 説明文（任意）
+  "uploader": "string",        // アップロード者（必須）
+  "fileName": "string",        // 元ファイル名
+  "filePath": "string",        // サーバー上のファイルパス
+  "fileSize": "number",        // ファイルサイズ（バイト）
+  "fileType": "string",        // MIMEタイプ
+  "uploadDate": "string",      // アップロード日時（ISO 8601）
+  "viewCount": "number",       // 閲覧数
+  "downloadCount": "number",   // ダウンロード数
+  "rating": "number",          // 平均評価（0-5）
+  "tags": "string[]"           // タグ配列
+}
+```
+
+### 5.2 Comment（コメント）
+
+```json
+{
+  "id": "number",              // ユニークID
+  "materialId": "number",      // 対象資料ID
+  "author": "string",          // コメント者名
+  "text": "string",            // コメント本文
+  "rating": "number",          // 評価（1-5）
+  "createdAt": "string",       // 作成日時（ISO 8601）
+  "updatedAt": "string"        // 更新日時（ISO 8601）
+}
+```
+
+### 5.3 Rating（評価）
+
+```json
+{
+  "id": "number",              // ユニークID
+  "materialId": "number",      // 対象資料ID
+  "userId": "string",          // ユーザーID
+  "rating": "number",          // 評価（1-5）
+  "createdAt": "string"        // 作成日時（ISO 8601）
+}
+```
+
+### 5.4 User（ユーザー）
+
+```json
+{
+  "id": "string",              // ユニークID
+  "nickname": "string",        // ニックネーム
+  "email": "string",           // メールアドレス（任意）
+  "bio": "string",             // 自己紹介（任意）
+  "uploadedMaterials": "number", // アップロード資料数
+  "createdAt": "string",       // 登録日時（ISO 8601）
+  "lastLoginAt": "string"      // 最終ログイン日時（ISO 8601）
+}
+```
+
+## 6. 実装状況
+
+### 6.1 完成済み機能
+- ✅ ファイルアップロード（マルチパート対応）
+- ✅ 資料CRUD操作（作成・読取・削除）
+- ✅ ファイル形式・サイズ制限
+- ✅ JSONファイルベースのデータ永続化
+- ✅ CORS設定
+- ✅ エラーハンドリング
+
+### 6.2 基本実装済み（機能拡張が必要）
+- 🔶 コメントシステム（基本CRUD）
+- 🔶 評価システム（基本CRUD） 
+- 🔶 ユーザー管理（基本CRUD）
+- 🔶 OCRエンドポイント（スタブ実装）
+
+### 6.3 未実装機能
+- ❌ JWT認証システム
+- ❌ ファイルダウンロード制御
+- ❌ レート制限
+- ❌ ページネーション
+- ❌ 高度な検索・フィルター
+- ❌ 実際のOCR処理（サーバーサイド）
+
+## 7. セキュリティ考慮事項
+
+### 7.1 現在実装済み
+- ファイル形式チェック（multer）
+- ファイルサイズ制限（50MB）
+- CORS設定
+- パス トラバーサル対策（自動ファイル名生成）
+
+### 7.2 今後実装予定
+- JWT認証・認可
+- リクエストレート制限
+- ファイルウイルススキャン
+- 入力値サニタイズ強化
+- HTTPS強制
+
+---
+
+**最終更新日**: 2025年11月9日  
+**バージョン**: 1.0.0  
+**実装者**: hiro
         "fileUrl": "https://storage.googleapis.com/.../test1.pdf",
         "uploadedBy": "Mr.Yamada",
         "rating": 4.5,

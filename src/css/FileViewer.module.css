@@ -1,0 +1,216 @@
+/* ファイルビューアーコンポーネントのスタイル */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ツールバー（PDFページナビゲーション） */
+.toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.navButton {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.navButton:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.navButton:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-weight: bold;
+  color: #2c3e50;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* PDFコンテナ */
+.pdfContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
+  min-height: 600px;
+}
+
+.pdfContainer .react-pdf__Document {
+  display: flex;
+  justify-content: center;
+}
+
+.pdfContainer .react-pdf__Page {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  margin: 10px;
+}
+
+/* 画像コンテナ */
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
+  min-height: 400px;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* テキストコンテナ */
+.textContainer {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+}
+
+.textContent {
+  font-family: 'Courier New', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #2c3e50;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* ローディング表示 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #7f8c8d;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  min-height: 200px;
+}
+
+/* エラー表示 */
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  min-height: 200px;
+}
+
+.error p {
+  color: #c0392b;
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+/* サポートされていないファイル形式 */
+.unsupported {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
+  background-color: #fff9c4;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  text-align: center;
+  min-height: 200px;
+}
+
+.unsupported h3 {
+  color: #8B4513;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.unsupported p {
+  color: #6c5ce7;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.downloadButton {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.downloadButton:hover {
+  background-color: #229954;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .toolbar {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .navButton {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .pdfContainer {
+    padding: 10px;
+  }
+  
+  .textContent {
+    font-size: 12px;
+  }
+  
+  .pageInfo {
+    min-width: auto;
+  }
+}

@@ -7,6 +7,8 @@
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  position: relative;
 }
 
 .card:hover {
@@ -24,29 +26,174 @@
 .title {
   margin: 0;
   font-size: 18px;
-  color: #333;
+  color: #2c3e50;
+  font-weight: bold;
+  flex: 1;
+  margin-right: 12px;
+  line-height: 1.3;
 }
 
 .subject {
-  background-color: #007bff;
-  color: white;
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: 16px;
   font-size: 12px;
   font-weight: bold;
+  color: white;
+  white-space: nowrap;
+}
+
+/* 科目別の色設定 */
+.subject数学 { background-color: #FF6B6B; }
+.subject英語 { background-color: #4ECDC4; }
+.subject言語文化 { background-color: #45B7D1; }
+.subject物理 { background-color: #FFA07A; }
+.subject科学と人間生活 { background-color: #98D8C8; }
+.subject電気回路 { background-color: #BB8FCE; }
+.subjectその他 { background-color: #F7DC6F; }
+.subject配布プリント { background-color: #999999; }
+
+/* ファイル情報 */
+.fileInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.fileName {
+  color: #495057;
+  font-weight: 500;
+  flex: 1;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileSize {
+  color: #6c757d;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .description {
-  color: #666;
+  color: #6c757d;
   line-height: 1.6;
   margin-bottom: 15px;
   font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .cardFooter {
   margin-bottom: 15px;
   padding-top: 15px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #e9ecef;
+}
+
+.metadata {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rating {
+  color: #f39c12;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.views, .downloads {
+  white-space: nowrap;
+}
+
+.uploadInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.uploader {
+  font-weight: 500;
+  color: #495057;
+}
+
+.date {
+  white-space: nowrap;
+}
+
+/* アクションボタン */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.viewBtn {
+  flex: 1;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.viewBtn:hover {
+  background-color: #2980b9;
+}
+
+.downloadBtn {
+  flex: 1;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.downloadBtn:hover {
+  background-color: #229954;
+}
+
+/* PDF.jsビューアーで開くボタン */
+.viewerBtn {
+  flex: 1;
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.viewerBtn:hover {
+  background-color: #e67e22;
 }
 
 .rating {
@@ -66,20 +213,4 @@
 .date {
   display: flex;
   gap: 5px;
-}
-
-.downloadBtn {
-  width: 100%;
-  padding: 12px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.downloadBtn:hover {
-  background-color: #218838;
 }
